@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pneumonia Prediction</title>
+</head>
+<body>
+    <h1>Pneumonia Prediction</h1>
+    <form id="image-form" enctype="multipart/form-data">
+        <input type="file" name="file" id="file-input" accept="image/*" required>
+        <button type="submit">Upload Image</button>
+    </form>
+
+    <div id="result">
+        <!-- Prediction result will be shown here -->
+    </div>
+
+    <script>
+        // Handle form submission and send image to Flask
+        document.getElementById('image-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append("file", document.getElementById("file-input").files[0]);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the prediction result
+                document.getElementById('result').innerHTML = `Prediction: ${data.prediction}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = 'Error in prediction!';
+            });
+        });
+    </script>
+</body>
+</html>
